@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import menu from "./menu.js"; // ← make sure the path is correct
+import { menuData } from "./menu.js";
 
 dotenv.config();
 
@@ -25,7 +25,7 @@ app.get("/api/foods", async (req, res) => {
 
 // NEW menu endpoint
 app.get("/api/menu", (req, res) => {
-  res.json(menu);
+  res.json(menuData);
 });
 
 // Homepage route
