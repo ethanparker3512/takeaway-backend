@@ -1,32 +1,47 @@
 import express from "express";
 import mongoose from "mongoose";
-import cors from "cors";
 import dotenv from "dotenv";
-import Food from "./models/foodModel.js";
+import cors from "cors";
+import { menu } from "./menu.js"; // ✅ Import your menu file
 
 dotenv.config();
 
 const app = express();
-app.use(cors());
 app.use(express.json());
+app.use(cors());
 
-// ✅ Connect MongoDB
-mongoose
-  .connect(process.env.MONGODB_URI)
-  .then(() => console.log("✅ MongoDB connected"))
-  .catch((err) => console.error("❌ MongoDB connection error:", err));
+// ✅ MongoDB connection
+const MONGO_URI = process.env.MONGO_URI;
+if (!MONGO_URI) {
+  console.error("❌ MongoDB connection string missing in .env");
+} else {
+  mongoose
+    .connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log("✅ MongoDB Connected"))
+    .catch((err) => console.error("❌ MongoDB connection error:", err));
+}
 
-// ✅ Simple homepage route
+// ✅ Basic test route
 app.get("/", (req, res) => {
-  res.send("🍔 Takeaway API is running successfully!");
+  res.send("🍔 Takeaway API is running...");
 });
 
-// ✅ Foods API route
+// ✅ Menu route (static menu)
+app.get("/api/menu", (req, res) => {
+  res.status(200).json(menu);
+});
+
+// ✅ Foods route (for your DB foods)
+import Food from "./models/Food.js"; // Only if you have a Food model
 app.get("/api/foods", async (req, res) => {
-  const foods = await Food.find();
-  res.json(foods);
+  try {
+    const foods = await Food.find();
+    res.status(200).json(foods);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
-// ✅ Start server
-const port = process.env.PORT || 10000;
-app.listen(port, () => console.log(`✅ Server running on port ${port}`));
+// ✅ Server listening
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
