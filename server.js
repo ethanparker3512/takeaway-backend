@@ -1,36 +1,28 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import { menuData } from "./menu.js";
+import cors from "cors";
+import authRoutes from "./routes/authRoutes.js";
 
 dotenv.config();
-
 const app = express();
-const PORT = process.env.PORT || 5000;
 
-// Middleware
 app.use(express.json());
+app.use(cors());
 
-// MongoDB connection
+// connect to MongoDB
 mongoose
-  .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(process.env.MONGO_URI)
   .then(() => console.log("✅ MongoDB Connected"))
-  .catch((err) => console.log("❌ MongoDB connection error:", err));
+  .catch((err) => console.log("❌ MongoDB Connection Error:", err));
 
-// Existing routes (example foods route)
-app.get("/api/foods", async (req, res) => {
-  // your existing food fetching logic
-  res.json([]); // placeholder
-});
-
-// NEW menu endpoint
-app.get("/api/menu", (req, res) => {
-  res.json(menuData);
-});
-
-// Homepage route
+// test route
 app.get("/", (req, res) => {
-  res.send("Takeaway API Running");
+  res.send("✅ API is running...");
 });
 
+// AUTH ROUTES
+app.use("/api/auth", authRoutes);
+
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
