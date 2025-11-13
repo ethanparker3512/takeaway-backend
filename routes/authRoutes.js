@@ -37,21 +37,24 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-// ✅ LOGIN route
+// ✅ LOGIN route (fixed)
 router.post("/login", async (req, res) => {
   try {
     const { phone, password } = req.body;
 
+    // find user by phone
     const user = await User.findOne({ phone });
     if (!user) {
       return res.status(400).json({ message: "User not found" });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    // compare passwords properly
+    const isMatch = await bcrypt.compare(password.toString(), user.password.toString());
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
+    // sign JWT
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });
@@ -62,8 +65,8 @@ router.post("/login", async (req, res) => {
       token,
     });
   } catch (err) {
+    console.error("❌ Login Error:", err);
     res.status(500).json({ message: err.message });
   }
 });
 
-export default router;
