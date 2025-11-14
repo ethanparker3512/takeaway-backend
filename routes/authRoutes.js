@@ -7,41 +7,32 @@ const router = express.Router();
 
 // ================= SIGNUP =================
 router.post("/signup", async (req, res) => {
-  try {
-    const { name, email, phone, password } = req.body;
+    try {
+        const { name, email, phone, password } = req.body;
 
-    // Check if user already exists
-    const existingUser = await User.findOne({ phone });
-    if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
+        console.log("========== SIGNUP DEBUG ==========");
+        console.log("Incoming signup password:", password);
+
+        // Hash password
+        const hashedPassword = await bcrypt.hash(password, 10);
+        console.log("Hashed password saved:", hashedPassword);
+
+        const user = await User.create({
+            name,
+            email,
+            phone,
+            password: hashedPassword,
+        });
+
+        res.status(201).json({
+            message: "Signup successful",
+            user,
+        });
+
+    } catch (error) {
+        console.error("Signup error:", error);
+        res.status(500).json({ error: error.message });
     }
-
-    // Hash password dynamically
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create new user
-    const newUser = new User({
-      name,
-      email,
-      phone,
-      password: hashedPassword,
-    });
-
-    await newUser.save();
-
-    // Create JWT token
-    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
-    });
-
-    res.status(201).json({
-      message: "Signup successful",
-      user: newUser,
-      token,
-    });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
 });
 
 // ================= LOGIN =================
