@@ -1,7 +1,7 @@
 import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import User from "../models/User.js"; // Make sure this path is correct
+import User from "../models/User.js";
 
 const router = express.Router();
 
@@ -37,35 +37,41 @@ router.post("/signup", async (req, res) => {
 
 // ================= LOGIN =================
 router.post("/login", async (req, res) => {
-  try {
-    const { phone, password } = req.body;
+    try {
+        const { email, phone, password } = req.body;
 
-    // Find user by phone
-    const user = await User.findOne({ phone });
-    if (!user) {
-      return res.status(400).json({ message: "User not found" });
+        // Allow user to login with PHONE or EMAIL
+        const user = await User.findOne({
+            $or: [{ phone }, { email }]
+        });
+
+        if (!user) {
+            return res.status(400).json({ message: "User not found" });
+        }
+
+        // Compare hashed password
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: "Invalid credentials" });
+        }
+
+        // Create token
+        const token = jwt.sign(
+            { id: user._id },
+            process.env.JWT_SECRET,
+            { expiresIn: "7d" }
+        );
+
+        res.status(200).json({
+            message: "Login successful",
+            user,
+            token,
+        });
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
-
-    // Compare password dynamically
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: "Invalid credentials" });
-    }
-
-    // Create JWT token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
-    });
-
-    res.status(200).json({
-      message: "Login successful",
-      user,
-      token,
-    });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
 });
 
-// Export default (required for ES Module import)
+// Export default router
 export default router;
