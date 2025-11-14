@@ -37,41 +37,34 @@ router.post("/signup", async (req, res) => {
 
 // ================= LOGIN =================
 router.post("/login", async (req, res) => {
-    try {
-        const { email, phone, password } = req.body;
+  try {
+    const { phone, password } = req.body;
 
-        // Allow user to login with PHONE or EMAIL
-        const user = await User.findOne({
-            $or: [{ phone }, { email }]
-        });
+    console.log("========== LOGIN DEBUG ==========");
+    console.log("Incoming phone:", phone);
+    console.log("Incoming raw password:", password);
 
-        if (!user) {
-            return res.status(400).json({ message: "User not found" });
-        }
+    const user = await User.findOne({ phone });
+    console.log("User found in DB:", user);
 
-        // Compare hashed password
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(400).json({ message: "Invalid credentials" });
-        }
-
-        // Create token
-        const token = jwt.sign(
-            { id: user._id },
-            process.env.JWT_SECRET,
-            { expiresIn: "7d" }
-        );
-
-        res.status(200).json({
-            message: "Login successful",
-            user,
-            token,
-        });
-
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+    if (!user) {
+      console.log("No user found with phone:", phone);
+      return res.status(400).json({ message: "User not found" });
     }
+
+    console.log("Comparing password:", password, "with hash:", user.password);
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    console.log("Password match result:", isMatch);
+
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
+
+    res.json({ message: "Login successful", user });
+  } catch (error) {
+    console.error("LOGIN ERROR:", error);
+    res.status(500).json({ error: error.message });
+  }
 });
 
-// Export default router
-export default router;
