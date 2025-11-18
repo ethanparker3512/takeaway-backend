@@ -6,7 +6,10 @@ import {
 
 const router = express.Router();
 
+// GET all subcategories
 router.get("/", getAllSubCategories);
+
+// GET subcategories by category
 router.get("/:categoryId", getSubCategoriesByCategory);
 
 export default router;
