@@ -6,6 +6,7 @@ import authRoutes from "./routes/authRoutes.js";
 import seedRoutes from "./routes/seedRoutes.js";
 import foodRoutes from "./routes/foodRoutes.js"; // ✅ new route
 import categoryRoutes from "./routes/categoryRoutes.js";
+import subCategoryRoutes from "./routes/subCategoryRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -18,6 +19,7 @@ app.use("/api", seedRoutes);
 
 // Category routes
 app.use("/api/categories", categoryRoutes);
+app.use("/api/subcategory", subCategoryRoutes);
 
 // Food routes
 app.use("/api", foodRoutes); // ✅ added
