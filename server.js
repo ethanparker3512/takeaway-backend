@@ -5,6 +5,7 @@ import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
 import seedRoutes from "./routes/seedRoutes.js";
 import foodRoutes from "./routes/foodRoutes.js"; // ✅ new route
+import categoryRoutes from "./routes/categoryRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -14,6 +15,9 @@ app.use(cors());
 
 // Seed routes
 app.use("/api", seedRoutes);
+
+// Category routes
+app.use("/api/categories", categoryRoutes);
 
 // Food routes
 app.use("/api", foodRoutes); // ✅ added
