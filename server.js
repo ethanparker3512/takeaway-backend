@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
 import seedRoutes from "./routes/seedRoutes.js";
-import foodRoutes from "./routes/foodRoutes.js"; // ✅ new route
+import foodRoutes from "./routes/foodRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import subCategoryRoutes from "./routes/subCategoryRoutes.js";
 
@@ -19,10 +19,12 @@ app.use("/api", seedRoutes);
 
 // Category routes
 app.use("/api/categories", categoryRoutes);
-app.use("/api/subcategory", subCategoryRoutes);
+
+// Subcategory routes (FIXED)
+app.use("/api/subcategories", subCategoryRoutes);
 
 // Food routes
-app.use("/api", foodRoutes); // ✅ added
+app.use("/api/food", foodRoutes);
 
 // AUTH ROUTES
 app.use("/api/auth", authRoutes);
