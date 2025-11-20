@@ -8,3 +8,13 @@ export const getFoods = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+export const createFood = async (req, res) => {
+  try {
+    const food = new Food(req.body);
+    await food.save();
+    res.status(201).json(food);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
