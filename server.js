@@ -24,7 +24,7 @@ app.use("/api/categories", categoryRoutes);
 app.use("/api/subcategories", subCategoryRoutes);
 
 // Food routes
-app.use("/api/food", foodRoutes);
+app.use("/api/foods", foodRoutes);
 
 // AUTH ROUTES
 app.use("/api/auth", authRoutes);
