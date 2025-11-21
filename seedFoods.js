@@ -3,11 +3,11 @@ import SubCategory from "./models/SubCategory.js";
 
 export const seedFoods = async (req, res) => {
   try {
-    // 1️⃣ Clear existing
+    // Clear existing data
     await Category.deleteMany({});
     await SubCategory.deleteMany({});
 
-    // 2️⃣ Insert Categories
+    // Insert Categories
     const categories = await Category.insertMany([
       {
         name: "Rice Dishes",
@@ -26,12 +26,12 @@ export const seedFoods = async (req, res) => {
       },
     ]);
 
-    // 3️⃣ Map categories
-    const riceCategory = categories.find((c) => c.name === "Rice Dishes")._id;
-    const pizzaCategory = categories.find((c) => c.name === "Pizza")._id;
-    const drinksCategory = categories.find((c) => c.name === "Drinks")._id;
+    // Map IDs
+    const riceCategory = categories.find(c => c.name === "Rice Dishes")._id;
+    const pizzaCategory = categories.find(c => c.name === "Pizza")._id;
+    const drinksCategory = categories.find(c => c.name === "Drinks")._id;
 
-    // 4️⃣ Insert Subcategories linked to categories
+    // Insert SubCategories
     await SubCategory.insertMany([
       // Rice
       { name: "Jollof Rice + Chicken", price: 25, category: riceCategory },
