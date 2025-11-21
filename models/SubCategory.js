@@ -3,10 +3,10 @@ import mongoose from "mongoose";
 const subCategorySchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
-    image: { type: String },
+    price: { type: Number, required: true },
     category: { 
       type: mongoose.Schema.Types.ObjectId, 
-      ref: "Category", 
+      ref: "Category",
       required: true 
     }
   },
