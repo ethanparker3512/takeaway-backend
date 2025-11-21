@@ -11,7 +11,7 @@ import subCategoryRoutes from "./routes/subCategoryRoutes.js";
 dotenv.config();
 const app = express();
 
-app.use(express.json());
+app.use(express.json({ strict: false }));
 app.use(cors());
 
 // Seed routes
