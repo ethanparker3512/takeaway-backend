@@ -1,4 +1,5 @@
 import Food from "../models/Food.js";
+import { seedFoods } from "../controllers/foodController.js";
 
 export const getFoods = async (req, res) => {
   try {
