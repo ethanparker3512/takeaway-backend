@@ -4,20 +4,15 @@ import SubCategory from "../models/SubCategory.js";
 
 const router = express.Router();
 
-// GET /api/home → returns categories with their subcategories
+// GET /api/home
 router.get("/home", async (req, res) => {
   try {
-    // Find all categories
     const categories = await Category.find().lean();
 
-    // For each category, attach its subcategories
     const categoriesWithSubs = await Promise.all(
       categories.map(async (cat) => {
         const subCategories = await SubCategory.find({ category: cat._id }).lean();
-        return {
-          ...cat,
-          subCategories,
-        };
+        return { ...cat, subCategories };
       })
     );
 
