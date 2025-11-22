@@ -1,22 +1,30 @@
-// src/routes/homeRoutes.js
 import express from "express";
 import Category from "../models/Category.js";
+import SubCategory from "../models/SubCategory.js";
 
 const router = express.Router();
 
-// GET /api/home
+// GET /api/home → returns categories with their subcategories
 router.get("/home", async (req, res) => {
   try {
-    const categories = await Category.find()
-      .populate({
-        path: "subCategories",
-        populate: { path: "foods" }
-      });
+    // Find all categories
+    const categories = await Category.find().lean();
 
-    res.json(categories);
-  } catch (err) {
-    console.error("Error fetching home data:", err);
-    res.status(500).json({ error: "Internal server error" });
+    // For each category, attach its subcategories
+    const categoriesWithSubs = await Promise.all(
+      categories.map(async (cat) => {
+        const subCategories = await SubCategory.find({ category: cat._id }).lean();
+        return {
+          ...cat,
+          subCategories,
+        };
+      })
+    );
+
+    res.json(categoriesWithSubs);
+  } catch (error) {
+    console.error("Error fetching home data:", error);
+    res.status(500).json({ error: "Failed to fetch home data." });
   }
 });
 
