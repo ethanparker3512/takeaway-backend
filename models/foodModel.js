@@ -1,10 +1,14 @@
+import express from "express";
+import Category from "../models/Category.js";
+import SubCategory from "../models/SubCategory.js";
+
+const router = express.Router();
+
 router.get("/home", async (req, res) => {
   try {
-    console.log("Fetching home categories...");
-    const categories = await Category.find().lean(); // add .lean() for faster queries
+    const categories = await Category.find().lean();
     const subcategories = await SubCategory.find().lean();
 
-    // attach subcategories to their parent category
     const data = categories.map(cat => ({
       ...cat,
       subCategories: subcategories.filter(sub => sub.category.toString() === cat._id.toString())
@@ -16,3 +20,5 @@ router.get("/home", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch home data." });
   }
 });
+
+export default router;
