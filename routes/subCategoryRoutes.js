@@ -1,24 +1,12 @@
 import express from "express";
-import SubCategory from "../models/SubCategory.js";
+import { subCategoryList } from "../subCategoryList.js";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  try {
-    const subcategories = await SubCategory.find().populate("category");
-    res.json(subcategories);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
-router.get("/category/:categoryId", async (req, res) => {
-  try {
-    const subcategories = await SubCategory.find({ category: req.params.categoryId });
-    res.json(subcategories);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+router.get("/:categoryId", (req, res) => {
+  const id = parseInt(req.params.categoryId);
+  const filtered = subCategoryList.filter(item => item.categoryId === id);
+  res.json(filtered);
 });
 
 export default router;

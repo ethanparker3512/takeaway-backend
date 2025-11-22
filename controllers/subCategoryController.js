@@ -1,33 +1,28 @@
 import SubCategory from "../models/SubCategory.js";
 
-// GET all subcategories
-export const getSubCategories = async (req, res) => {
+export const createSubCategory = async (req, res) => {
   try {
-    const subcategories = await SubCategory.find().populate("category");
-    res.json(subcategories);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    const subCat = await SubCategory.create(req.body);
+    res.status(201).json(subCat);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
   }
 };
 
-// GET subcategories by category
 export const getSubCategoriesByCategory = async (req, res) => {
   try {
-    const subcategories = await SubCategory.find({
-      category: req.params.categoryId,
-    });
-    res.json(subcategories);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+    const subCats = await SubCategory.find({ categoryId: req.params.categoryId });
 
-// GET single subcategory
-export const getSubCategory = async (req, res) => {
-  try {
-    const subcategory = await SubCategory.findById(req.params.id);
-    res.json(subcategory);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    const formatted = subCats.map(item => ({
+      id: item._id,
+      name: item.name,
+      description: item.description,
+      price: item.price,
+      URL: item.url
+    }));
+
+    res.status(200).json(formatted);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
   }
 };
