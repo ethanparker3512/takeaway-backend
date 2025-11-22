@@ -7,9 +7,12 @@ import seedRoutes from "./routes/seedRoutes.js";
 import foodRoutes from "./routes/foodRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import subCategoryRoutes from "./routes/subCategoryRoutes.js";
+import homeRoutes from "./routes/homeRoutes.js";
 
 dotenv.config();
 const app = express();
+
+app.use("/api", homeRoutes);
 
 app.use(express.json({ strict: false }));
 app.use(cors());
