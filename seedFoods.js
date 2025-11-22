@@ -1,14 +1,13 @@
-<<<<<<< HEAD
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import Category from "./models/Category.js";
 import SubCategory from "./models/SubCategory.js";
 import Food from "./models/Food.js";
-=======
+
 // seedFoods.js
 import Category from "./models/Category.js";
 import SubCategory from "./models/SubCategory.js";
->>>>>>> 729ba441eceea6f761fd3f333c794fcec924b658
+729ba441eceea6f761fd3f333c794fcec924b658
 
 /**
  * Full seeding for Categories + SubCategories (based on the menu you provided).
@@ -17,7 +16,7 @@ import SubCategory from "./models/SubCategory.js";
  * - Intended to be called from your seed route which already has DB connected.
  */
 
-<<<<<<< HEAD
+
 // Connect to DB
 mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
@@ -431,4 +430,4 @@ export const seedFoods = async () => {
     throw error;
   }
 };
->>>>>>> 729ba441eceea6f761fd3f333c794fcec924b658
+ 729ba441eceea6f761fd3f333c794fcec924b658
