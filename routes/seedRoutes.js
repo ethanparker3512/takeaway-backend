@@ -1,4 +1,4 @@
-\import express from "express";
+import express from "express";
 import { seedFoods } from "../seedFoods.js";
 
 const router = express.Router();
